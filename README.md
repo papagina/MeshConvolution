@@ -19,11 +19,11 @@ The files are organized by three folders: code, data and train.
 ### 2. Environment
 For compiling and running the C++ project in *GraphSampling*, you need to install cmake, ZLIB and opencv.
 
-For running the python code in GraphAE, I recommend to use anaconda virtual environment with python3.6, numpy, pytorch0.4.1 or higher version such as pytorch1.3, plyfile, json, configparser, tensorboardX, matplotlib, transforms3d, opencv-python. For visualization, you will need freeglut and pythonOpenGL.
+For running the python code in GraphAE, I recommend to use anaconda virtual environment with python3.6, numpy, pytorch0.4.1 or higher version such as pytorch1.3, plyfile, json, configparser, tensorboardX, matplotlib, transforms3d and opencv-python.
 
 ### 3. Data Preparation
 #### Step One: 
-Download registrations_f.hdf5 and registrations_m.hdf5 from [D-FAUST](http://dfaust.is.tue.mpg.de/) to data/DFAUST/ and use code/GraphAE/graphAE_datamaker_DFAUST.py to generate numpy arrays, train.npy, eval.npy and test.npy for training, validation and testing, with dimension pc_num*point_num*channel (pc for a model instance, point for vertex, channel for features). Please write to me for getting the exact training and testing data we used in the paper.
+Download registrations_f.hdf5 and registrations_m.hdf5 from [D-FAUST](http://dfaust.is.tue.mpg.de/) to data/DFAUST/ and use code/GraphAE/graphAE_datamaker_DFAUST.py to generate numpy arrays, train.npy, eval.npy and test.npy for training, validation and testing, with dimension pc_num*point_num*channel (pc for a model instance, point for vertex, channel for features). Please write to me for getting the exact training and testing data we used in the paper. 
 
 #### Step Two: 
 Pick up an arbitray mesh in the dataset as the template mesh and create:
@@ -32,6 +32,9 @@ Pick up an arbitray mesh in the dataset as the template mesh and create:
 2. template.ply. It will be used by *GraphAE* for saving temporate result in ply.
 
 We have put the example templated.obj and template.ply files in data/DFAUST. 
+
+#### Tips:
+For any dataset, in general, it works better if scaling the data to have the bounding box between 1.0*1.0*1.0 and 2.0*2.0*2.0.
 
 ### 2. GraphSampling
 This code will load template.obj, compute the down and up-sampling graphs and write the *connection matrices* for each layer into .npy files. Please refer to Section 3.1, 3.4 and Appendix A.2 in the paper for understanding the algorithms, and read the comments in the code for more details.
@@ -57,6 +60,35 @@ For customizing the code, open main.cpp and modify the path for the template mes
 The current code doesn't support graph with multiple unconnected components. To enable that, one option is to uncomment line 320 and 321 in meshPooler to create edges between the components based on their euclidean distances.
 
 The distX information is not really used in our network.
+
+### 3. Network Training
+#### Step One: Create Configuration files.
+Create a configuration file in the training folder. We put three examples 10_conv_pool.config, 20_conv.config and 30_conv_res.config in "train/0422_graphAE_dfaust/". They are the configurations for Experiment 1.5, 1.4 and 1.3 in Table 2 in the paper. I wrote the meaning of each attribute in explanation.config.
+
+By setting the attributes of *connection_layer_lst*, *channel_lst*, *weight_num_lst* and *residual_rate_lst*, you can freely design your own network architecture with all or part of the connection matrices we generated previously. But make sure the sizes of the output and input between two layers match.
+
+#### Step Two: Training
+Open graphAE_train.py, modify line 188 to the path of the configuration file, and run
+```
+python graphAE_train.py
+```
+
+It will save the temporal results, the network parameters and the tensorboardX log files in the directories written in the configuration file.
+
+#### Step Three: Testing
+Open graphAE_test.py, modify the paths and run
+```
+python graphAE_test.py
+```
+
+
+
+#### Tips:
+- For path to folders, always add "/" in the end, e.g. "/mnt/.../.../XXX/"
+
+- The network can still work well when the training data are augmented with global rotation and translation.
+
+- In the code, *pcs* means point clouds which refers to all the vertices in a mesh. *weight_num* refers to the size of the kernel basis. *weights* refers to the global kernel basis or the locally-variant kernels for every vertices. *w_weights* refers to the locally variant coefficients for every vertices. 
 
 
 
