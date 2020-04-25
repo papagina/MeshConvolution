@@ -43,8 +43,15 @@ make
 ./GraphSampling
 ```
 
-#### *Connection matrix* 
-This matrix defines the connection between the input graph and the output graph. has the dimension of out_point_num*(1+max_neighbor_num*2). Each row i contains the indices and distance of the vertices in the input graph that are connected with the vertex i in the output graph, padded by virtual vertices. The format is 
-{N, {id0, dist0}, {id1, dist1}, ..., {idN, distN}, {in_point_num, -1}*max_neighbor_num}
+The program will generate the *Connection matrices* for 8 pooling layers and 8 unpooling layers and their corresponding obj meshes for visualization in "train/0422_graphAE_dfaust/ConnectionMatrices".
+
+*Connection matrix* contains the connection information between the input graph and the output graph. Its dimension is out_point_num*(1+max_neighbor_num*2). *max_neighobr_num* is the maximum number of connected vertices in the input graph for all vertices in the output graph. For a vertex i in the output graph, the format of row i is
+{N, {id0, dist0}, {id1, dist1}, ..., {idN, distN}, {in_point_num, -1}, ..., {in_point_num, -1}}
+N is the number of its connected vertices in the input graph, idX are their index in the input graph, distX are the distance between vertex i's corresponding vertex in the input graph and vertex X (the lenght of the orange path in Figure 1 and 10). {in_point_num, -1} are padded after them. (We don't use distX in our network).
+
+
+
+
+
 
 
