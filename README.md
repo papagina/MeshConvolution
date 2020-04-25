@@ -34,7 +34,7 @@ Pick up an arbitray mesh in the dataset as the template mesh and create:
 We have put the example templated.obj and template.ply files in data/DFAUST. 
 
 ### 2. GraphSampling
-This code will load template.obj, compute the down and up-sampling graphs and write the *connection matrices* for each layer into .npy files. Please refer to Section 3.1, 3.4 and Appendix A.2 in the paper and the comments in the code for understanding the algorithms.
+This code will load template.obj, compute the down and up-sampling graphs and write the *connection matrices* for each layer into .npy files. Please refer to Section 3.1, 3.4 and Appendix A.2 in the paper for understanding the algorithms, and read the comments in the code for more details.
 
 For compiling and running the code, go to "code/GraphSampling", open the terminal, run
 ```
@@ -45,16 +45,17 @@ make
 
 It will generate the *Connection matrices* for each sampling layer named as _poolX.npy or _unpoolX.npy and their corresponding obj meshes for visualization in "train/0422_graphAE_dfaust/ConnectionMatrices". In the code, I refer up and down sampling as  "pool" and "unpool" just for simplification. 
 
-*Connection matrix* contains the connection information between the input graph and the output graph. Its dimension is out_point_num*(1+max_neighbor_num*2). *max_neighobr_num* is the maximum number of connected vertices in the input graph for all vertices in the output graph. For a vertex i in the output graph, the format of row i is
+*Connection matrix* contains the connection information between the input graph and the output graph. Its dimension is out_point_num*(1+M*2). M is the maximum number of connected vertices in the input graph for all vertices in the output graph. For a vertex i in the output graph, the format of row i is
 {N, {id0, dist0}, {id1, dist1}, ..., {idN, distN}, {in_point_num, -1}, ..., {in_point_num, -1}}
 N is the number of its connected vertices in the input graph, idX are their index in the input graph, distX are the distance between vertex i's corresponding vertex in the input graph and vertex X (the lenght of the orange path in Figure 1 and 10). {in_point_num, -1} are padded after them. (We don't use distX in our network).
 
-For seeing the output graph of layer X, open vis_center_X.obj by MeshLab in vertex and edge rendering mode. For seeing the receptive field, open vis_receptive_X.obj with face rendering mode. 
+For seeing the output graph of layer X, open vis_center_X.obj by MeshLab in vertex and edge rendering mode. For seeing the receptive field, open vis_receptive_X.obj in face rendering mode. 
 
-For customizing the code, open main.cpp and modify the path for the template mesh (line 33) and the output folder (line 46). For defining the layers, use MeshCNN::add_pool_layer(int stride, int pool_radius, int unpool_radius) to add a new down-sampling layer and its corresponding up-sampling layer.  In function void set_7k_mesh_layers_dfaust(MeshCNN &meshCNN), we create 8 down-sampling and up-sampling layers.  
+For customizing the code, open main.cpp and modify the path for the template mesh (line 33) and the output folder (line 46). For creating layers in sequence, use MeshCNN::add_pool_layer(int stride, int pool_radius, int unpool_radius) to add a new down-sampling layer and its corresponding up-sampling layer. When stride=1, the graph size won't change. As an example, in *void set_7k_mesh_layers_dfaust(MeshCNN &meshCNN)*, we create 8 down-sampling and up-sampling layers. 
 
-Tips:
-With stride=1 and radius=1 the output graph size and topology wont change. It can be used for building normal convolution layers or as a laplacian operator.
+The current code doesn't support graph with multiple unconnected components. To enable that, one option is to uncomment line 320 and 321 in meshPooler to create edges between the components based on their euclidean distances.
+
+
 
 
 
