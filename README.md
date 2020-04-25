@@ -63,7 +63,7 @@ The distX information is not really used in our network.
 
 ### 3. Network Training
 #### Step One: Create Configuration files.
-Create a configuration file in the training folder. We put three examples 10_conv_pool.config, 20_conv.config and 30_conv_res.config in "train/0422_graphAE_dfaust/". They are the configurations for Experiment 1.5, 1.4 and 1.3 in Table 2 in the paper. I wrote the meaning of each attribute in explanation.config.
+Create a configuration file in the training folder. We put three examples 10_conv_pool.config, 20_conv.config and 30_conv_res.config in "train/0422_graphAE_dfaust/". They are the configurations for Experiment 1.3, 1.4 and 1.5 in Table 2 in the paper. I wrote the meaning of each attribute in explanation.config.
 
 By setting the attributes of *connection_layer_lst*, *channel_lst*, *weight_num_lst* and *residual_rate_lst*, you can freely design your own network architecture with all or part of the connection matrices we generated previously. But make sure the sizes of the output and input between two layers match.
 
