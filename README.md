@@ -23,18 +23,18 @@ For running the python code in GraphAE, I recommend to use anaconda virtual envi
 
 ### 3. Data Preparation
 #### Step One: 
-Download registrations_f.hdf5 and registrations_m.hdf5 from [D-FAUST](http://dfaust.is.tue.mpg.de/) to data/D-FAUST/ and use code/GraphAE/graphAE_datamaker_DFAUST.py to generate numpy arrays, train.npy, eval.npy and test.npy for training, validation and testing, with dimension pc_num*point_num*channel (pc for a model instance, point for vertex, channel for features). Please write to me for getting the exact training and testing data we used in the paper.
+Download registrations_f.hdf5 and registrations_m.hdf5 from [D-FAUST](http://dfaust.is.tue.mpg.de/) to data/DFAUST/ and use code/GraphAE/graphAE_datamaker_DFAUST.py to generate numpy arrays, train.npy, eval.npy and test.npy for training, validation and testing, with dimension pc_num*point_num*channel (pc for a model instance, point for vertex, channel for features). Please write to me for getting the exact training and testing data we used in the paper.
 
 #### Step Two: 
 Pick up an arbitray mesh in the dataset as the template mesh and create:
-1. template.obj. It will be used by *GraphSampling*. If you want to manually indicate some center vertices, set their color to be red (1.0, 0, 0) using the paint tool in MeshLab and the program will be aware of them.
+1. template.obj. It will be used by *GraphSampling*. If you want to manually assign some center vertices, set their color to be red (1.0, 0, 0) using the paint tool in MeshLab as the example template.obj in data/DFAUST.
 
 2. template.ply. It will be used by *GraphAE* for saving temporate result in ply.
 
-You can use the sample templated.obj and template.ply files in data/DFAUST. 
+We have put the example templated.obj and template.ply files in data/DFAUST. 
 
 ### 2. GraphSampling
-This code will load template.obj, compute the down and up-sampling graphs and write the *connection matrices* for each layer into .npy files. Please Check Section 3.1, 3.4 and Appendix A.2 in the paper for understanding the algorithms.
+This code will load template.obj, compute the down and up-sampling graphs and write the *connection matrices* for each layer into .npy files. Please refer to Section 3.1, 3.4 and Appendix A.2 in the paper and the comments in the code for understanding the algorithms.
 
 For compiling and running the code, go to "code/GraphSampling", open the terminal, run
 ```
@@ -43,67 +43,8 @@ make
 ./GraphSampling
 ```
 
-For running the code:
-#### Step Two
-
-
-*Connection matrix* has the dimension of out_point_num*(1+max_neighbor_num*2). Each row i contains the indices and distance of the vertices in the input graph that are connected with the vertex i in the output graph, padded by virtual vertices. The format is 
+#### *Connection matrix* 
+This matrix defines the connection between the input graph and the output graph. has the dimension of out_point_num*(1+max_neighbor_num*2). Each row i contains the indices and distance of the vertices in the input graph that are connected with the vertex i in the output graph, padded by virtual vertices. The format is 
 {N, {id0, dist0}, {id1, dist1}, ..., {idN, distN}, {in_point_num, -1}*max_neighbor_num}
-
-
-
-Step One: 
-First, open the C++ project in "code/GraphSampling/". Go to main.cpp, chanege the obj and output folder directory in line 122, 130 and 131. I recommend to put the outputs in the experiement folder as what I set in this code. Please create the folders first. If you want to manually set some vertices to always be included in the center point sets, you can mark their color as (255,0,0) red using MeshLab. Otherwise, the program will pickup the center points for each layer by itself.
-
-The function set_943k_mesh_layers() defines the layers which I tested will work on 1m-vertex data. You can also define your own by using 
-meshCNN.add_pool_layer(stride, pool_kernel, unpool_kernel). each time you call this function, it will define a new convolution layer based on the last layer and the corresponding transpose convolution layer.
-
-Compile the code:
-cmake .
-make
-
-Run the code:
-./PointSampling
-
-It will generate a bunch of _poolX.npy and _unpoolX.npy files in the following matrix format.
-num_points_after_conv * (1+max_neighbor_num*2)
-For each entry, the values are [neighbor_num, max_neighbor_num*[neighbor_index, neighbor_dist]]
-For non-existing neighbors, the index is set to be num_before_conv and dist is set to be -1.
-
-The will be loaded in the python code for initializing the network.
-
-In the terminal, I print the layer index, the stride, the radius_pool, the radius_unpool and the output points (center points) number, please read it.
-
-the funciton mpv.save_obj_with_colored_sample_points_all_layers(folder+"body_1m/center_", mesh,meshCNN) creates obj meshes for each convolution layer that have the center points being red. 
-
-You can also visualize the receptive field and the down sampled points for each pooling layer by using function mpv.save_colored_obj_pool_receptive_field_for_whole_cnn(). It will create colorful obj meshes. Be carefull, it is very slow for deeper layers.
-
-
-
-
-### 3. Data Preparation
-You need three files.
-1. template.obj will be loaded by *GraphSampling*. Again, it should have the same faces as the whole dataset and contains rgb colors per vertex. If you want to manually select some points in the mesh to be always included at all layers, you can set the color of those points to be red (255,0,0) using MeshLab and PointSampling08 will be aware of them when doing the downsampling. As an example, you can find that the template_v_n_c_manual_centers.obj in "data/hand/" contains a red vertex at each finger tips and the wrist. It's fine that you don't manually define any vertices.
-
-In data/D-FAUST, I have already put the template meshes. 
-
-
-### 3. Network Configuration
-1.3 1.4 1.5 in Table 2.
-### 4. 
-**Train** stores the *connection matrices* generated by *GraphSampling*, the experiment configuration files and the training results.
-
-
-
-
-
-### 3
-
-
-
-
-
-
-
 
 
