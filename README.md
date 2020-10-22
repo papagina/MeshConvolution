@@ -1,5 +1,5 @@
 # Mesh Convolution 
-This repository contains the code (in PyTorch) for the paper "Mesh Convolution Using a Learned Kernel Basis".
+This repository contains the code (in PyTorch) for the paper "FULLY CONVOLUTIONAL MESH AUTOENCODER USING EFFICIENT SPATIALLY VARYING KERNELS".
 
 ## Contents
 1. [Introduction](#introduction)
@@ -23,7 +23,7 @@ For running the python code in GraphAE, I recommend to use anaconda virtual envi
 
 ### 3. Data Preparation
 #### Step One: 
-Download registrations_f.hdf5 and registrations_m.hdf5 from [D-FAUST](http://dfaust.is.tue.mpg.de/) to data/DFAUST/ and use code/GraphAE/graphAE_datamaker_DFAUST.py to generate numpy arrays, train.npy, eval.npy and test.npy for training, validation and testing, with dimension pc_num*point_num*channel (pc for a model instance, point for vertex, channel for features). Please write to me for getting the exact training and testing data we used in the paper. 
+Download registrations_f.hdf5 and registrations_m.hdf5 from [D-FAUST](http://dfaust.is.tue.mpg.de/) to data/DFAUST/ and use code/GraphAE/graphAE_datamaker_DFAUST.py to generate numpy arrays, train.npy, eval.npy and test.npy for training, validation and testing, with dimension pc_num*point_num*channel (pc for a model instance, point for vertex, channel for features). For the data we used in the paper, please download from: https://drive.google.com/drive/folders/1r3WiX1xtpEloZtwCFOhbydydEXajjn0M?usp=sharing
 
 #### Step Two: 
 Pick up an arbitray mesh in the dataset as the template mesh and create:
@@ -81,8 +81,6 @@ Open graphAE_test.py, modify the paths and run
 python graphAE_test.py
 ```
 
-
-
 #### Tips:
 - For path to folders, always add "/" in the end, e.g. "/mnt/.../.../XXX/"
 
@@ -91,8 +89,15 @@ python graphAE_test.py
 - In the code, *pcs* means point clouds which refers to all the vertices in a mesh. *weight_num* refers to the size of the kernel basis. *weights* refers to the global kernel basis or the locally-variant kernels for every vertices. *w_weights* refers to the locally variant coefficients for every vertices. 
 
 
+### 4. Experiments with other graph CNN layers
+Check the code in GraphAE27_new_compare and the training configurations in train/0223_GraphAE27_compare
+You will need to install the following packages.
 
-
+pip install torch-scatter==latest+cu92 -f https://pytorch-geometric.com/whl/torch-1.6.0.html
+pip install torch-sparse==latest+cu92 -f https://pytorch-geometric.com/whl/torch-1.6.0.html
+pip install torch-cluster==latest+cu92 -f https://pytorch-geometric.com/whl/torch-1.6.0.html
+pip install torch-spline-conv==latest+cu92 -f https://pytorch-geometric.com/whl/torch-1.6.0.html
+pip install torch-geometric
 
 
 
