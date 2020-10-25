@@ -1,5 +1,5 @@
 # Mesh Convolution 
-This repository contains the code (in PyTorch) for the paper "FULLY CONVOLUTIONAL MESH AUTOENCODER USING EFFICIENT SPATIALLY VARYING KERNELS".
+This repository contains the implementation (in PyTorch) of the paper [FULLY CONVOLUTIONAL MESH AUTOENCODER USING EFFICIENT SPATIALLY VARYING KERNELS](https://arxiv.org/pdf/2006.04325.pdf) ([Project Page](https://zhouyisjtu.github.io/project_vcmeshcnn/vcmeshcnn.html)). 
 
 ## Contents
 1. [Introduction](#introduction)
@@ -98,8 +98,6 @@ pip install torch-sparse==latest+cu92 -f https://pytorch-geometric.com/whl/torch
 pip install torch-cluster==latest+cu92 -f https://pytorch-geometric.com/whl/torch-1.6.0.html
 pip install torch-spline-conv==latest+cu92 -f https://pytorch-geometric.com/whl/torch-1.6.0.html
 pip install torch-geometric
-
-
 
 
 
