@@ -25,6 +25,8 @@ For running the python code in GraphAE, I recommend to use anaconda virtual envi
 #### Step One: 
 Download registrations_f.hdf5 and registrations_m.hdf5 from [D-FAUST](http://dfaust.is.tue.mpg.de/) to data/DFAUST/ and use code/GraphAE/graphAE_datamaker_DFAUST.py to generate numpy arrays, train.npy, eval.npy and test.npy for training, validation and testing, with dimension pc_num*point_num*channel (pc for a model instance, point for vertex, channel for features). For the data we used in the paper, please download from: https://drive.google.com/drive/folders/1r3WiX1xtpEloZtwCFOhbydydEXajjn0M?usp=sharing
 
+For downloading the sakura trunk dataset and asian dragon dataset, please find the links in data/asiandragon.md and data/sakuratrunk.md.
+
 #### Step Two: 
 Pick up an arbitray mesh in the dataset as the template mesh and create:
 1. template.obj. It will be used by *GraphSampling*. If you want to manually assign some center vertices, set their color to be red (1.0, 0, 0) using the paint tool in MeshLab as the example template.obj in data/DFAUST.
