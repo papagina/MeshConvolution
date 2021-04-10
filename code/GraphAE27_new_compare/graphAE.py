@@ -435,7 +435,7 @@ class Model(nn.Module):
         batch = gt_pc.shape[0]
         
         gt_pc_laplace = gt_pc[:, self.initial_neighbor_id_lstlst[:,0]]   ## batch*point_num*3 the first point is itself
-        gt_pc_laplace = gt_pc_laplace*self.initial_neighbor_num_lst.view(1, self.point_num, 1).repeat(batch, 1,3)
+        gt_pc_laplace = gt_pc_laplace*(self.initial_neighbor_num_lst.view(1, self.point_num, 1).repeat(batch, 1,3)-1)
         
         for n in range(1, self.initial_max_neighbor_num):
             #print (neighbor_id_lstlst[:,n])
@@ -444,7 +444,7 @@ class Model(nn.Module):
         
         
         predict_pc_laplace = predict_pc[:, self.initial_neighbor_id_lstlst[:,0]]   ## batch*point_num*3 the first point is itself
-        predict_pc_laplace = predict_pc_laplace*self.initial_neighbor_num_lst.view(1, self.point_num, 1).repeat(batch, 1,3)
+        predict_pc_laplace = predict_pc_laplace*(self.initial_neighbor_num_lst.view(1, self.point_num, 1).repeat(batch, 1,3)-1)
         
         for n in range(1, self.initial_max_neighbor_num):
             #print (neighbor_id_lstlst[:,n])
@@ -476,7 +476,7 @@ class Model(nn.Module):
         batch = gt_pc.shape[0]
         
         gt_pc_laplace = gt_pc[:, self.initial_neighbor_id_lstlst[:,0]]   ## batch*point_num*3 the first point is itself
-        gt_pc_laplace = gt_pc_laplace*self.initial_neighbor_num_lst.view(1, self.point_num, 1).repeat(batch, 1,3)
+        gt_pc_laplace = gt_pc_laplace*(self.initial_neighbor_num_lst.view(1, self.point_num, 1).repeat(batch, 1,3)-1)
         
         for n in range(1, self.initial_max_neighbor_num):
             #print (neighbor_id_lstlst[:,n])
@@ -486,7 +486,7 @@ class Model(nn.Module):
         
         
         predict_pc_laplace = predict_pc[:, self.initial_neighbor_id_lstlst[:,0]]   ## batch*point_num*3 the first point is itself
-        predict_pc_laplace = predict_pc_laplace*self.initial_neighbor_num_lst.view(1, self.point_num, 1).repeat(batch, 1,3)
+        predict_pc_laplace = predict_pc_laplace*(self.initial_neighbor_num_lst.view(1, self.point_num, 1).repeat(batch, 1,3)-1)
         
         for n in range(1, self.initial_max_neighbor_num):
             #print (neighbor_id_lstlst[:,n])
